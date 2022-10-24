@@ -1,38 +1,186 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.AppMenu, .Game {
+  padding: 10px 50px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.AppMenu button {
+  width: 7rem;
+  height: 3rem;
+  margin-top: 20px;
+
+  background-color: #4caf50;
+  color: #FFF;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+
+  animation-name: "buttonHoverExit";
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+.AppMenu button:hover {
+  cursor: pointer;
+
+  animation-name: "buttonHover";
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+.top-header-fix {
+  font-size: 2.5rem;
+  font-family: 'Silkscreen', Arial;
+  background-color: #439445;
+  color: white;
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.top-header-fix img {
+  width: 75px;
+  height: 75px;
+  margin-left: 30px;
+  opacity: 0.6;
+}
+
+@keyframes buttonHover {
+  from {
+    border-radius: 10px;
+  } to {
+    border-radius: 0;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+@keyframes buttonHoverExit {
+  from {
+    border-radius: 0;
+  } to {
+    border-radius: 10px;
+  }
+}
+
+.Ressources, .Business, .Craft {
+  border: 2px solid #439445;
+  border-radius: 3px;
+  padding: 30px;
+}
+
+.Ressources h1, .Market h1, .Craft h1, .Store h1 {
+  text-align: left;
+}
+
+.Ressources {
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.stats {
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #4caf50;
+}
+
+.stats h1 {
+  margin-left: 30px;
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 40px;
+}
+
+.items ul {
+  list-style-type: none;
+}
+
+.Business {
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.Market, .Store {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Store {
+  margin-left: 40px;
+}
+
+.Market img, .Craft img, .Store img {
+  width: 50px;
+  height: 50px;
+}
+
+.ingredients, .craftables, .sellables {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.ing-water, .ing-beans, .craft-coffee, .craft-crate, .sell-coffee, .sell-crate {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 10px 20px;
+  border: 2px solid #439445;
+  border-radius: 5px;
+  margin: 10px;
+
+  font-size: 11px;
+}
+
+.ing-water *, .ing-beans *, .craft-coffee *, .sell-coffee *, .craft-crate *, .sell-crate * {
+  margin-bottom: 10px;
+}
+
+.ing-water button, 
+.ing-beans button, 
+.craft-coffee button, 
+.sell-coffee button, 
+.craft-crate button, 
+.sell-crate button {
+  width: 3rem;
+  height: 1.3rem;
+  background-color: #439445;
   color: white;
+  border: none;
+  border-radius: 3px;
 }
 
-.App-link {
-  color: #61dafb;
+.ing-water button:hover, 
+.ing-beans button:hover, 
+.craft-coffee button:hover, 
+.sell-coffee button:hover, 
+.craft-crate button:hover, 
+.sell-crate button:hover {
+  background-color: #4caf50;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.ing-water button:active, 
+.ing-beans button:active, 
+.craft-coffee button:active, 
+.sell-coffee button:active, 
+.craft-crate button:active, 
+.sell-crate button:active {
+  font-weight: 600;
+}
+
+.Craft {
+  display: flex;
+  flex-direction: column;
 }
