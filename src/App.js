@@ -7,9 +7,10 @@ import img_crate from './img/crate.png';
 import img_container from './img/container.png';
 import img_bottle from './img/bottle.png';
 import img_bag from './img/bag.jpeg';
+import img_auto_brew from './img/auto-brew.png';
 
 
-const START_BUDGET = 300;
+const START_BUDGET = 1000;
 
 const WATER_BUY_PRICE = 1;
 const WATER_SELL_PRICE = 0.5;
@@ -20,6 +21,7 @@ const CRATE_SELL_PRICE = 180;
 const CONTAINER_SELL_PRICE = 900;
 const BOTTLE_BUY_PRICE = 100;
 const BAG_BUY_PRICE = 600;
+const AUTO_BREW_PRICE = 500;
 
 
 function Game() {
@@ -29,6 +31,7 @@ function Game() {
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
   const [container, setContainer] = useState(0);
+  const [brewing, setBrewing] = useState(false);
 
   function checkBalance(price) {
     if (money >= price) {
@@ -92,7 +95,16 @@ function Game() {
       e.target.parentNode.className = "item deactivated";
       document.getElementById("bag-button").disabled = true;
     }
-    
+  }
+
+  function buyAutoBrew(e) {
+    if (checkBalance(AUTO_BREW_PRICE)) {
+      setMoney(money - AUTO_BREW_PRICE);
+      setBrewing(true);
+
+      e.target.parentNode.className = "item deactivated";
+      document.getElementById("buy-brew-button").disabled = true;
+    }
   }
 
   function craftCoffee() {
@@ -135,6 +147,14 @@ function Game() {
     if (container > 0) {
       setMoney(money + CONTAINER_SELL_PRICE);
       setContainer(container - 1);
+    }
+  }
+
+  function autoBrew() {
+  if (water > 1 && beans > 2) {
+      setCoffee(beans / 2);
+      setBeans(beans % 2);
+      setWater(water - beans / 2);
     }
   }
 
@@ -222,25 +242,41 @@ function Game() {
         </div>
       </div>
 
-      <div className='Craft'>
-        <h1>Craft</h1>
-        <div className='craftables'>
-          <div className='item'>
-            <img src={img_cup} />
-            <button onClick={craftCoffee}>Craft</button>
-            <p>1 Water | 2 Beans</p>
-          </div>
+      <div className='Tools'>
+        <div className='Craft'>
+          <h1>Craft</h1>
+          <div className='craftables'>
+            <div className='item'>
+              <img src={img_cup} />
+              <button onClick={craftCoffee}>Craft</button>
+              <p>1 Water | 2 Beans</p>
+              {brewing ? (
+                <button id="autobrew-button" onClick={autoBrew}>Autobrew</button>) : (<></>)}
+            </div>
 
-          <div className='item'>
-            <img src={img_crate} />
-            <button onClick={craftCrate}>Craft</button>
-            <p>20 Coffee</p>
-          </div>
+            <div className='item'>
+              <img src={img_crate} />
+              <button onClick={craftCrate}>Craft</button>
+              <p>20 Coffee</p>
+            </div>
 
-          <div className='item'>
-            <img src={img_container} />
-            <button onClick={craftContainer}>Craft</button>
-            <p>5 Crates</p>
+            <div className='item'>
+              <img src={img_container} />
+              <button onClick={craftContainer}>Craft</button>
+              <p>5 Crates</p>
+            </div>
+          </div>
+        </div>
+
+        <div className='Upgrades'>
+          <h1>Upgrades</h1>
+          <div className='upgradeables'>
+            <div className='item'>
+              <h4>Automatic Brewing</h4>
+              <img src={img_auto_brew} />
+              <button id="buy-brew-button" onClick={(event) => buyAutoBrew(event)}>Buy</button>
+              <p>Buy for {AUTO_BREW_PRICE}€</p>
+            </div>
           </div>
         </div>
       </div>

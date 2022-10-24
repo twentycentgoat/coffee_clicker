@@ -29,6 +29,15 @@ body {
   animation-fill-mode: forwards;
 }
 
+#autobrew-button {
+  width: 5rem;
+  background-color: #1f8dba;
+}
+
+#autobrew-button:hover {
+  background-color: #45b3e0;
+}
+
 .AppMenu button:hover {
   cursor: pointer;
 
@@ -90,7 +99,7 @@ body {
   }
 }
 
-.Ressources, .Business, .Craft {
+.Ressources, .Business, .Tools {
   border: 2px solid #439445;
   border-radius: 3px;
   padding: 30px;
@@ -126,27 +135,26 @@ body {
   list-style-type: none;
 }
 
-.Business {
+.Business, .Tools {
   margin-bottom: 20px;
   display: flex;
 }
 
 .Market, .Store {
-  height: 300px;
   display: flex;
   flex-direction: column;
 }
 
-.Store {
+.Store, .Deals, .Upgrades {
   margin-left: 40px;
 }
 
-.Market img, .Craft img, .Store img, .Deals img {
+.Market img, .Craft img, .Store img, .Deals img, .Upgrades img {
   width: 50px;
   height: 50px;
 }
 
-.ingredients, .craftables, .sellables, .dealables {
+.ingredients, .craftables, .sellables, .dealables, .upgradeables {
   padding: 20px;
   display: flex;
   flex-direction: row;
@@ -183,11 +191,6 @@ body {
 
 .item button:active, #leave-button:active {
   font-weight: 600;
-}
-
-.Craft {
-  display: flex;
-  flex-direction: column;
 }
 
 .deactivated {
