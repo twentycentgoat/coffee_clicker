@@ -5,18 +5,15 @@ import img_beans from './img/beans.png';
 import img_cup from './img/cup.jpeg';
 import img_crate from './img/crate.png';
 
-import header_coffee from './img/header-coffee.png';
-
-
 
 const START_BUDGET = 200
 
-const WATER_BUY_PRICE = 5;
-const WATER_SELL_PRICE = 3;
+const WATER_BUY_PRICE = 1;
+const WATER_SELL_PRICE = 0.5;
 const BEANS_BUY_PRICE = 15;
-const BEANS_SELL_PRICE = 3.4; 
-const COFFEE_SELL_PRICE = 15;
-const CRATE_SELL_PRICE = 315;
+const BEANS_SELL_PRICE = 1.8; 
+const COFFEE_SELL_PRICE = 8;
+const CRATE_SELL_PRICE = 290;
 
 
 function Game() {
@@ -25,7 +22,6 @@ function Game() {
   const [beans, setBeans] = useState(0);
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
-
 
   function checkBalance(price) {
     if (money >= price) {
@@ -125,14 +121,14 @@ function Game() {
         <div className='Market'>
         <h1>Market</h1>
           <div className='ingredients'>
-            <div className='ing-water'>
+            <div className='item'>
               <img src={img_water} />
               <button onClick={() => handleWater(true)}>Buy 1</button>
               <p>Price: {WATER_BUY_PRICE}€</p>
               <button onClick={() => handleWater(false)}>Sell 1</button>
               <p>Price: {WATER_SELL_PRICE}€</p>
             </div>
-            <div className='ing-beans'>
+            <div className='item'>
               <img src={img_beans}/>
               <button onClick={() => handleBeans(true)}>Buy 5</button>
               <p>Price: {BEANS_BUY_PRICE}€</p>
@@ -145,13 +141,13 @@ function Game() {
         <div className='Store'>
           <h1>Store</h1>
           <div className='sellables'>
-            <div className='sell-coffee'>
+            <div className='item'>
               <img src={img_cup}></img>
               <button onClick={sellCoffee}>Sell 1</button>
               <p>Sell for {COFFEE_SELL_PRICE}€</p>
             </div>
 
-            <div className='sell-crate'>
+            <div className='item'>
               <img src={img_crate}></img>
               <button onClick={sellCrate}>Sell 1</button>
               <p>Sell for {CRATE_SELL_PRICE}€</p>
@@ -163,13 +159,13 @@ function Game() {
       <div className='Craft'>
         <h1>Craft</h1>
         <div className='craftables'>
-          <div className='craft-coffee'>
+          <div className='item'>
             <img src={img_cup}></img>
             <button onClick={() => craftCoffee()}>Craft</button>
             <p>1 Water | 2 Beans</p>
           </div>
 
-          <div className='craft-crate'>
+          <div className='item'>
             <img src={img_crate}></img>
             <button onClick={() => craftCrate()}>Craft</button>
             <p>20 Coffee</p>
@@ -184,19 +180,32 @@ function Game() {
 function Menu() {
   const [started, setStarted] = useState(false);
 
-  function startGame() {
-    setStarted(true);
+  function startGame(arg) {
+    setStarted(arg);
   }
 
   if (started) {
     return (
+    <>
+      <div className='top-header-fix'>
+        <div className='header-items'>
+          <h1>Coffee Clicker</h1>
+        </div>
+        <button id="leave-button" onClick={() => startGame(false)}>Leave</button>
+      </div>
       <Game />
+    </>
     )
   } else {
     return (
-      <div className="AppMenu">
-        <button onClick={startGame}>Start</button>  
+    <>
+      <div className='top-header-fix'>
+        <h1>Coffee Clicker</h1>
       </div>
+      <div className="AppMenu">
+        <button onClick={() => startGame(true)}>Start</button>  
+      </div>
+    </>
     )
   }
 }
@@ -205,10 +214,6 @@ function Menu() {
 function App() {
   return (
     <div className="App">
-      <div className='top-header-fix'>
-        <h1>Coffee Clicker</h1>
-        <img src={header_coffee}></img>
-      </div>
       <Menu />
     </div>
   );

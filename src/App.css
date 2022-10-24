@@ -41,6 +41,7 @@
   padding-left: 40px;
   display: flex;
   align-items: center;
+  justify-content: space-around;
 }
 
 .top-header-fix img {
@@ -48,6 +49,25 @@
   height: 75px;
   margin-left: 30px;
   opacity: 0.6;
+}
+
+.header-items {
+  display: flex;
+  flex-direction: row;
+}
+
+#leave-button {
+  color: #FFF;
+  font-size: 1rem;
+  background-color: #D93B45;
+  border: none;
+  border-radius: 3px;
+  width: 4rem;
+  height: 2rem;
+}
+
+#leave-button:hover {
+  background-color: #D84953;
 }
 
 @keyframes buttonHover {
@@ -132,7 +152,7 @@
   flex-direction: row;
 }
 
-.ing-water, .ing-beans, .craft-coffee, .craft-crate, .sell-coffee, .sell-crate {
+.item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -144,16 +164,11 @@
   font-size: 11px;
 }
 
-.ing-water *, .ing-beans *, .craft-coffee *, .sell-coffee *, .craft-crate *, .sell-crate * {
+.item * {
   margin-bottom: 10px;
 }
 
-.ing-water button, 
-.ing-beans button, 
-.craft-coffee button, 
-.sell-coffee button, 
-.craft-crate button, 
-.sell-crate button {
+.item button {
   width: 3rem;
   height: 1.3rem;
   background-color: #439445;
@@ -162,21 +177,11 @@
   border-radius: 3px;
 }
 
-.ing-water button:hover, 
-.ing-beans button:hover, 
-.craft-coffee button:hover, 
-.sell-coffee button:hover, 
-.craft-crate button:hover, 
-.sell-crate button:hover {
+.item button:hover {
   background-color: #4caf50;
 }
 
-.ing-water button:active, 
-.ing-beans button:active, 
-.craft-coffee button:active, 
-.sell-coffee button:active, 
-.craft-crate button:active, 
-.sell-crate button:active {
+.item button:active, #leave-button:active {
   font-weight: 600;
 }
 
