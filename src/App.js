@@ -251,6 +251,7 @@ function Game() {
           <div className='dealables'>
             <div className='item'>
               <h4>Water Bottle</h4>
+              <p className="description">(100 Water)</p>
               <img src={img_bottle} />
               <button id="bottle-button" onClick={(event) => handleBottle(event)}>Buy</button>
               <p>Buy for {BOTTLE_BUY_PRICE}€</p>
@@ -258,6 +259,7 @@ function Game() {
 
             <div className='item'>
               <h4>Bean Bag</h4>
+              <p className='description'>(200 Beans)</p>
               <img src={img_bag} />
               <button id="bag-button" onClick={(event) => handleBag(event)}>Buy</button>
               <p>Buy for {BAG_BUY_PRICE}€</p>
