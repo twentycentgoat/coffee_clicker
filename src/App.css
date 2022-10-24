@@ -8,6 +8,8 @@ body {
   font-family: 'Inter', Arial, Helvetica, sans-serif;
 }
 
+/* GAME MENU */
+
 .AppMenu, .Game {
   padding: 10px 50px;
 }
@@ -29,58 +31,12 @@ body {
   animation-fill-mode: forwards;
 }
 
-#autobrew-button {
-  width: 5rem;
-  background-color: #1f8dba;
-}
-
-#autobrew-button:hover {
-  background-color: #45b3e0;
-}
-
 .AppMenu button:hover {
   cursor: pointer;
 
   animation-name: "buttonHover";
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
-}
-
-.top-header-fix {
-  font-size: 2.5rem;
-  font-family: 'Silkscreen', Arial;
-  background-color: #439445;
-  color: white;
-  padding-left: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.top-header-fix img {
-  width: 75px;
-  height: 75px;
-  margin-left: 30px;
-  opacity: 0.6;
-}
-
-.header-items {
-  display: flex;
-  flex-direction: row;
-}
-
-#leave-button {
-  color: #FFF;
-  font-size: 1rem;
-  background-color: #D93B45;
-  border: none;
-  border-radius: 3px;
-  width: 4rem;
-  height: 2rem;
-}
-
-#leave-button:hover {
-  background-color: #D84953;
 }
 
 @keyframes buttonHover {
@@ -99,10 +55,59 @@ body {
   }
 }
 
-.Ressources, .Business, .Tools, .Goal {
-  border: 2px solid #439445;
+/* GAME HEADER */
+
+.game-header {
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  font-size: 2.5rem;
+  font-family: 'Silkscreen', Arial;
+  background-color: #439445;
+  color: white;
+}
+
+.game-header img {
+  width: 75px;
+  height: 75px;
+
+  margin-left: 30px;
+  opacity: 0.6;
+}
+
+.game-header-items {
+  display: flex;
+}
+
+#leave-button {
+  width: 4rem;
+  height: 2rem;
+
+  color: #FFF;
+  font-size: 1rem;
+  background-color: #D93B45;
+  border: none;
   border-radius: 3px;
-  padding: 30px;
+}
+
+#leave-button:hover {
+  background-color: #D84953;
+}
+
+/* MAIN GAME */
+
+.Stats {
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #4caf50;
+}
+
+.Stats h1 {
+  margin-left: 30px;
 }
 
 .Ressources {
@@ -111,16 +116,10 @@ body {
   margin-bottom: 20px;
 }
 
-.stats {
-  height: 200px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: #4caf50;
-}
-
-.stats h1 {
-  margin-left: 30px;
+.Ressources, .Business, .Tools, .Goal {
+  border: 2px solid #439445;
+  border-radius: 3px;
+  padding: 30px;
 }
 
 .items {
@@ -190,6 +189,15 @@ body {
 
 .item button:active, #leave-button:active {
   font-weight: 600;
+}
+
+#autobrew-button {
+  width: 5rem;
+  background-color: #1f8dba;
+}
+
+#autobrew-button:hover {
+  background-color: #45b3e0;
 }
 
 .description {

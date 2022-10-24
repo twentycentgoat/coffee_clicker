@@ -32,8 +32,10 @@ function Game() {
   const [beans, setBeans] = useState(0);
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
-  const [container, setContainer] = useState(0);
+  const [containers, setContainer] = useState(0);
   const [brewing, setBrewing] = useState(false);
+  const [reachedGoal, setReachedGoal] = useState(false);
+
 
   function checkBalance(price) {
     if (money >= price) {
@@ -51,113 +53,80 @@ function Game() {
     }
   }
 
-  function handleWater(state) {
-    if (state) {
-      if (checkBalance(WATER_BUY_PRICE)) {
-        setMoney(money - WATER_BUY_PRICE)
-        setWater(water + 1)
-      }
-    } else {
-      if (checkInventory(water)) {
-        setMoney(money + WATER_SELL_PRICE);
-        setWater(water - 1);
-      }
+  function handleTransactionMarket(item, state) {
+    if (item == 'water' && state && checkBalance(WATER_BUY_PRICE)) {
+      setMoney(money - WATER_BUY_PRICE);
+      setWater(water + 1);
+    } else if (item == 'water' && !state && checkInventory(water)) {
+      setMoney(money + WATER_SELL_PRICE);
+      setWater(water - 1);
+    } else if (item == 'beans' && state && checkBalance(BEANS_BUY_PRICE)) {
+      setMoney(money - BEANS_BUY_PRICE);
+      setBeans(beans + 5); 
+    } else if (item == 'beans' && !state &&checkInventory(beans)) {
+      setMoney(money + BEANS_SELL_PRICE);
+      setBeans(beans - 1);
     }
   }
 
-  function handleBeans(state) {
-    if (state) {
-      if (checkBalance(BEANS_BUY_PRICE)) {
-        setMoney(money - BEANS_BUY_PRICE)
-        setBeans(beans + 5)
-      }
-    } else {
-      if (checkInventory(beans)) {
-        setMoney(money + BEANS_SELL_PRICE);
-        setBeans(beans - 1);
-      }
-    }
-  }
-
-  function handleBottle(e) {
-    if (checkBalance(BOTTLE_BUY_PRICE)) {
+  function handleTransactionItems(item, e) {
+    if (item == 'bottle' && checkBalance(BOTTLE_BUY_PRICE)) {
       setMoney(money - BOTTLE_BUY_PRICE);
       setWater(water + 100);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("bottle-button").disabled = true;
-    }
-  }
-
-  function handleBag(e) {
-    if (checkBalance(BAG_BUY_PRICE)) {
+    } else if (item == 'bag' && checkBalance(BAG_BUY_PRICE)) {
       setMoney(money - BAG_BUY_PRICE);
       setBeans(beans + 200);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("bag-button").disabled = true;
-    }
-  }
-
-  function buyAutoBrew(e) {
-    if (checkBalance(AUTO_BREW_PRICE)) {
+    } else if (item == 'auto_brew' && checkBalance(AUTO_BREW_PRICE)) {
       setMoney(money - AUTO_BREW_PRICE);
       setBrewing(true);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("buy-brew-button").disabled = true;
-    }
-  }
-
-  function buyCar(e) {
-    if (checkBalance(CAR_BUY_PRICE)) {
+    } else if (item == 'car') {
       setMoney(money - 10000);
+      setReachedGoal(true);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("buy-car-button").disabled = true;
+    } else {
+      //
     }
   }
 
-  function craftCoffee() {
-    if (water >= 1 && beans >= 2) {
+  function craftItem(item) {
+    if (item == 'coffee' && (water >= 1 && beans >= 2)) {
       setWater(water - 1);
       setBeans(beans - 2);
       setCoffee(coffee + 1);
-    }
-  }
-
-  function craftCrate() {
-    if (coffee >= 20) {
+    } else if (item == 'crate' && coffee >= 20) {
       setCrates(crates + 1);
       setCoffee(coffee - 20);
-    }
-  }
-
-  function craftContainer() {
-    if (container >= 5) {
-      setContainer(container + 1);
+    } else if (item == 'containers' && crates >= 5) {
+      setContainer(containers + 1);
       setCrates(crates - 5);
+    } else {
+      //
     }
   }
 
-  function sellCoffee() {
-    if (coffee > 0) {
+  function sellItem(item) {
+    if (item == 'coffee' && coffee > 0) {
       setMoney(money + COFFEE_SELL_PRICE);
       setCoffee(coffee - 1);
-    }
-  }
-
-  function sellCrate() {
-    if (crates > 0) {
+    } else if (item == 'crate' && crates > 0) {
       setMoney(money + CRATE_SELL_PRICE);
       setCrates(crates - 1)
-    }
-  }
-
-  function sellContainer() {
-    if (container > 0) {
+    } else if (item == 'containers' && containers > 0) {
       setMoney(money + CONTAINER_SELL_PRICE);
-      setContainer(container - 1);
+      setContainer(containers - 1);
+    } else {
+      //
     }
   }
 
@@ -175,11 +144,10 @@ function Game() {
     }
   }
 
-
   return(
     <div className='Game'>
 
-      <div className='stats'>
+      <div className='Stats'>
         <h1>Money: {money.toFixed(2)}€</h1>
         <h1>Profit: {(money - START_BUDGET).toFixed(2)}€</h1>
       </div>
@@ -192,7 +160,7 @@ function Game() {
             <li>Beans: {beans}</li>
             <li>Coffee: {coffee}</li>
             <li>Crates: {crates}</li>
-            <li>Containers: {container}</li>
+            <li>Containers: {containers}</li>
           </ul>
         </div>
       </div>
@@ -204,17 +172,18 @@ function Game() {
             <div className='item'>
               <h4>Water</h4>
               <img src={img_water} />
-              <button onClick={() => handleWater(true)}>Buy 1</button>
+              <button onClick={() => handleTransactionMarket('water', true)}>Buy 1</button>
               <p>Price: {WATER_BUY_PRICE}€</p>
-              <button onClick={() => handleWater(false)}>Sell 1</button>
+              <button onClick={() => handleTransactionMarket('water', false)}>Sell 1</button>
               <p>Price: {WATER_SELL_PRICE}€</p>
             </div>
+
             <div className='item'>
               <h4>Beans</h4>
               <img src={img_beans}/>
-              <button onClick={() => handleBeans(true)}>Buy 5</button>
+              <button onClick={() => handleTransactionMarket('beans', true)}>Buy 5</button>
               <p>Price: {BEANS_BUY_PRICE}€</p>
-              <button onClick={() => handleBeans(false)}>Sell 1</button>
+              <button onClick={() => handleTransactionMarket('beans', false)}>Sell 1</button>
               <p>Price: {BEANS_SELL_PRICE}€</p>
             </div>
           </div>
@@ -226,21 +195,21 @@ function Game() {
             <div className='item'>
               <h4>Coffee</h4>
               <img src={img_cup} />
-              <button onClick={sellCoffee}>Sell 1</button>
+              <button onClick={() => sellItem('coffee')}>Sell 1</button>
               <p>Sell for {COFFEE_SELL_PRICE}€</p>
             </div>
 
             <div className='item'>
               <h4>Crates</h4>
               <img src={img_crate} />
-              <button onClick={sellCrate}>Sell 1</button>
+              <button onClick={() => sellItem('crate')}>Sell 1</button>
               <p>Sell for {CRATE_SELL_PRICE}€</p>
             </div>
 
             <div className='item'>
               <h4>Containers</h4>
               <img src={img_container} /> 
-              <button onClick={sellContainer}>Sell 1</button>
+              <button onClick={() => sellItem('containers')}>Sell 1</button>
               <p>Sell for {CONTAINER_SELL_PRICE}€</p>
             </div>
           </div>
@@ -253,7 +222,7 @@ function Game() {
               <h4>Water Bottle</h4>
               <p className="description">(100 Water)</p>
               <img src={img_bottle} />
-              <button id="bottle-button" onClick={(event) => handleBottle(event)}>Buy</button>
+              <button id="bottle-button" onClick={(event) => handleTransactionItems('bottle', event)}>Buy</button>
               <p>Buy for {BOTTLE_BUY_PRICE}€</p>
             </div>
 
@@ -261,7 +230,7 @@ function Game() {
               <h4>Bean Bag</h4>
               <p className='description'>(200 Beans)</p>
               <img src={img_bag} />
-              <button id="bag-button" onClick={(event) => handleBag(event)}>Buy</button>
+              <button id="bag-button" onClick={(event) => handleTransactionItems('bag', event)}>Buy</button>
               <p>Buy for {BAG_BUY_PRICE}€</p>
             </div>
           </div>
@@ -275,7 +244,7 @@ function Game() {
             <div className='item'>
               <h4>Coffee</h4>
               <img src={img_cup} />
-              <button onClick={craftCoffee}>Craft</button>
+              <button onClick={() => craftItem('coffee')}>Craft</button>
               <p>1 Water | 2 Beans</p>
               {brewing ? (
                 <button id="autobrew-button" onClick={autoBrew}>Autobrew</button>) : (<></>)}
@@ -284,14 +253,14 @@ function Game() {
             <div className='item'>
               <h4>Crate</h4>
               <img src={img_crate} />
-              <button onClick={craftCrate}>Craft</button>
+              <button onClick={() => craftItem('crate')}>Craft</button>
               <p>20 Coffee</p>
             </div>
 
             <div className='item'>
               <h4>Container</h4>
               <img src={img_container} />
-              <button onClick={craftContainer}>Craft</button>
+              <button onClick={() => craftItem('containers')}>Craft</button>
               <p>5 Crates</p>
             </div>
           </div>
@@ -303,7 +272,7 @@ function Game() {
             <div className='item'>
               <h4>Automatic Brewing</h4>
               <img src={img_auto_brew} />
-              <button id="buy-brew-button" onClick={(event) => buyAutoBrew(event)}>Buy</button>
+              <button id="buy-brew-button" onClick={(event) => handleTransactionItems('auto_brew', event)}>Buy</button>
               <p>Buy for {AUTO_BREW_PRICE}€</p>
             </div>
           </div>
@@ -317,7 +286,7 @@ function Game() {
             <div className='item'>
               <h4>A New Car</h4>
               <img src={img_car} />
-              <button onClick={(event) => buyCar(event)}>Buy</button>
+              <button onClick={(event) => handleTransactionItems('car', event)}>Buy</button>
               <p>Buy for {CAR_BUY_PRICE}€</p>
             </div>
           </div>
@@ -338,8 +307,8 @@ function Menu() {
   if (started) {
     return (
     <>
-      <div className='top-header-fix'>
-        <div className='header-items'>
+      <div className='game-header'>
+        <div className='game-header-items'>
           <h1>Coffee Clicker</h1>
         </div>
         <button id="leave-button" onClick={() => startGame(false)}>Leave</button>
@@ -350,7 +319,7 @@ function Menu() {
   } else {
     return (
     <>
-      <div className='top-header-fix'>
+      <div className='game-header'>
         <h1>Coffee Clicker</h1>
       </div>
       <div className="AppMenu">
