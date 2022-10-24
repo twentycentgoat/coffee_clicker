@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
 .AppMenu, .Game {
   padding: 10px 50px;
 }
@@ -92,10 +96,6 @@
   padding: 30px;
 }
 
-.Ressources h1, .Market h1, .Craft h1, .Store h1 {
-  text-align: left;
-}
-
 .Ressources {
   height: 200px;
   display: flex;
@@ -141,12 +141,12 @@
   margin-left: 40px;
 }
 
-.Market img, .Craft img, .Store img {
+.Market img, .Craft img, .Store img, .Deals img {
   width: 50px;
   height: 50px;
 }
 
-.ingredients, .craftables, .sellables {
+.ingredients, .craftables, .sellables, .dealables {
   padding: 20px;
   display: flex;
   flex-direction: row;
@@ -188,4 +188,28 @@
 .Craft {
   display: flex;
   flex-direction: column;
+}
+
+.deactivated {
+  border: 2px solid grey;
+}
+
+.deactivated img {
+  filter: none;
+  -webkit-filter: grayscale(100%);
+  -moz-filter:    grayscale(100%);
+  -ms-filter:     grayscale(100%);
+  -o-filter:      grayscale(100%);
+}
+
+.deactivated button {
+  background-color: grey;
+}
+
+.deactivated button:hover {
+  background-color: grey;
+}
+
+.deactivated button:active {
+  font-weight: 400;
 }

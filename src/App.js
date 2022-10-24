@@ -4,6 +4,9 @@ import img_water from './img/water.jpeg';
 import img_beans from './img/beans.png';
 import img_cup from './img/cup.jpeg';
 import img_crate from './img/crate.png';
+import img_container from './img/container.png';
+import img_bottle from './img/bottle.png';
+import img_bag from './img/bag.jpeg';
 
 
 const START_BUDGET = 200
@@ -11,9 +14,12 @@ const START_BUDGET = 200
 const WATER_BUY_PRICE = 1;
 const WATER_SELL_PRICE = 0.5;
 const BEANS_BUY_PRICE = 15;
-const BEANS_SELL_PRICE = 1.8; 
+const BEANS_SELL_PRICE = 2.4; 
 const COFFEE_SELL_PRICE = 8;
-const CRATE_SELL_PRICE = 290;
+const CRATE_SELL_PRICE = 180;
+const CONTAINER_SELL_PRICE = 1000;
+const BOTTLE_BUY_PRICE = 100;
+const BAG_BUY_PRICE = 600;
 
 
 function Game() {
@@ -22,6 +28,7 @@ function Game() {
   const [beans, setBeans] = useState(0);
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
+  const [container, setContainer] = useState(0);
 
   function checkBalance(price) {
     if (money >= price) {
@@ -67,6 +74,27 @@ function Game() {
     }
   }
 
+  function handleBottle(e) {
+    if (checkBalance(BOTTLE_BUY_PRICE)) {
+      setMoney(money - BOTTLE_BUY_PRICE);
+      setWater(water + 100);
+
+      e.target.parentNode.className = "item deactivated";
+      document.getElementById("bottle-button").disabled = true;
+    }
+  }
+
+  function handleBag(e) {
+    if (checkBalance(BAG_BUY_PRICE)) {
+      setMoney(money - BAG_BUY_PRICE);
+      setWater(water + 200);
+
+      e.target.parentNode.className = "item deactivated";
+      document.getElementById("bag-button").disabled = true;
+    }
+    
+  }
+
   function craftCoffee() {
     if (water >= 1 && beans >= 2) {
       setWater(water - 1);
@@ -82,6 +110,13 @@ function Game() {
     }
   }
 
+  function craftContainer() {
+    if (container >= 5) {
+      setContainer(container + 1);
+      setCrates(crates - 5);
+    }
+  }
+
   function sellCoffee() {
     if (coffee > 0) {
       setMoney(money + COFFEE_SELL_PRICE);
@@ -93,6 +128,13 @@ function Game() {
     if (crates > 0) {
       setMoney(money + CRATE_SELL_PRICE);
       setCrates(crates - 1)
+    }
+  }
+
+  function sellContainer() {
+    if (container > 0) {
+      setMoney(money + CONTAINER_SELL_PRICE);
+      setContainer(container - 1);
     }
   }
 
@@ -113,6 +155,7 @@ function Game() {
             <li>Beans: {beans}</li>
             <li>Coffee: {coffee}</li>
             <li>Crates: {crates}</li>
+            <li>Containers: {container}</li>
           </ul>
         </div>
       </div>
@@ -142,15 +185,38 @@ function Game() {
           <h1>Store</h1>
           <div className='sellables'>
             <div className='item'>
-              <img src={img_cup}></img>
+              <img src={img_cup} />
               <button onClick={sellCoffee}>Sell 1</button>
               <p>Sell for {COFFEE_SELL_PRICE}€</p>
             </div>
 
             <div className='item'>
-              <img src={img_crate}></img>
+              <img src={img_crate} />
               <button onClick={sellCrate}>Sell 1</button>
               <p>Sell for {CRATE_SELL_PRICE}€</p>
+            </div>
+
+            <div className='item'>
+              <img src={img_container} /> 
+              <button onClick={sellContainer}>Sell 1</button>
+              <p>Sell for {CONTAINER_SELL_PRICE}€</p>
+            </div>
+          </div>
+        </div>
+
+        <div className='Deals'>
+          <h1>Deals</h1>
+          <div className='dealables'>
+            <div className='item'>
+              <img src={img_bottle} />
+              <button id="bottle-button" onClick={(event) => handleBottle(event)}>Buy</button>
+              <p>Buy for {BOTTLE_BUY_PRICE}€</p>
+            </div>
+
+            <div className='item'>
+              <img src={img_bag} />
+              <button id="bag-button" onClick={(event) => handleBag(event)}>Buy</button>
+              <p>Buy for {BAG_BUY_PRICE}€</p>
             </div>
           </div>
         </div>
@@ -160,15 +226,21 @@ function Game() {
         <h1>Craft</h1>
         <div className='craftables'>
           <div className='item'>
-            <img src={img_cup}></img>
-            <button onClick={() => craftCoffee()}>Craft</button>
+            <img src={img_cup} />
+            <button onClick={craftCoffee}>Craft</button>
             <p>1 Water | 2 Beans</p>
           </div>
 
           <div className='item'>
-            <img src={img_crate}></img>
-            <button onClick={() => craftCrate()}>Craft</button>
+            <img src={img_crate} />
+            <button onClick={craftCrate}>Craft</button>
             <p>20 Coffee</p>
+          </div>
+
+          <div className='item'>
+            <img src={img_container} />
+            <button onClick={craftContainer}>Craft</button>
+            <p>5 Crates</p>
           </div>
         </div>
       </div>
