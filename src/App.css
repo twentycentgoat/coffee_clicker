@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  flex-wrap: wrap;
 }
 
 body {
@@ -201,7 +203,9 @@ body {
 }
 
 .description {
-  font-size: 8px;
+  font-size: 9px;
+  text-align: center;
+  line-height: 0.5;
 }
 
 .deactivated {
@@ -226,4 +230,8 @@ body {
 
 .deactivated button:active {
   font-weight: 400;
+}
+
+#salesprice {
+  color: #439445;
 }

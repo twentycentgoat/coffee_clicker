@@ -9,21 +9,34 @@ import img_bottle from './img/bottle.png';
 import img_bag from './img/bag.jpeg';
 import img_auto_brew from './img/auto-brew.png';
 import img_car from './img/car.png';
+import img_shop from './img/shop.png';
 
 
-const START_BUDGET = 2000;
+let START_BUDGET = 20000;
 
-const WATER_BUY_PRICE = 1;
-const WATER_SELL_PRICE = 0.5;
-const BEANS_BUY_PRICE = 15;
-const BEANS_SELL_PRICE = 2.4; 
-const COFFEE_SELL_PRICE = 8;
-const CRATE_SELL_PRICE = 180;
-const CONTAINER_SELL_PRICE = 900;
-const BOTTLE_BUY_PRICE = 100;
-const BAG_BUY_PRICE = 600;
-const AUTO_BREW_PRICE = 500;
-const CAR_BUY_PRICE = 10000;
+let WATER_BUY_PRICE = 1;
+let BEANS_BUY_PRICE = 15;
+let BOTTLE_BUY_PRICE = 100;
+let BAG_BUY_PRICE = 600;
+let AUTO_BREW_PRICE = 500;
+let CAR_BUY_PRICE = 10000;
+let SHOP_BUY_PRICE = 20000;
+
+let WATER_SELL_PRICE = 0.5;
+let BEANS_SELL_PRICE = 2.4;
+let COFFEE_SELL_PRICE = 8;
+let CRATE_SELL_PRICE = 180;
+let CONTAINER_SELL_PRICE = 900;
+
+
+
+function PriceUpdate() {
+  return (
+    <>
+      <p id="salesprice">+15% On Sales</p>
+    </>
+  )
+}
 
 
 function Game() {
@@ -34,7 +47,9 @@ function Game() {
   const [crates, setCrates] = useState(0);
   const [containers, setContainer] = useState(0);
   const [brewing, setBrewing] = useState(false);
-  const [reachedGoal, setReachedGoal] = useState(false);
+  const [priceUpdate, setPriceUpdate] = useState(false);
+  const [carOwned, setCarOwned] = useState(false);
+  const [shopOwned, setShopOwned] = useState(false);
 
 
   function checkBalance(price) {
@@ -88,12 +103,24 @@ function Game() {
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("buy-brew-button").disabled = true;
-    } else if (item == 'car') {
+    } else if (item == 'car' && checkBalance(CAR_BUY_PRICE)) {
       setMoney(money - 10000);
-      setReachedGoal(true);
+      setCarOwned(true);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("buy-car-button").disabled = true;
+    } else if (item == 'shop' && checkBalance(SHOP_BUY_PRICE)) {
+      setMoney(money - 20000);
+      WATER_SELL_PRICE *= 1.15;
+      BEANS_SELL_PRICE *= 1.15;
+      COFFEE_SELL_PRICE *= 1.15;
+      CRATE_SELL_PRICE *= 1.15;
+      CONTAINER_SELL_PRICE *= 1.15;
+      setPriceUpdate(true);
+      setShopOwned(true);
+
+      e.target.parentNode.className = "item deactivated";
+      document.getElementById("buy-shop-button").disabled = true;
     } else {
       //
     }
@@ -175,7 +202,8 @@ function Game() {
               <button onClick={() => handleTransactionMarket('water', true)}>Buy 1</button>
               <p>Price: {WATER_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('water', false)}>Sell 1</button>
-              <p>Price: {WATER_SELL_PRICE}€</p>
+              <p>Price: {WATER_SELL_PRICE.toFixed(2)}€</p>
+              {priceUpdate ? (<PriceUpdate />) : (<></>)}
             </div>
 
             <div className='item'>
@@ -184,7 +212,8 @@ function Game() {
               <button onClick={() => handleTransactionMarket('beans', true)}>Buy 5</button>
               <p>Price: {BEANS_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('beans', false)}>Sell 1</button>
-              <p>Price: {BEANS_SELL_PRICE}€</p>
+              <p>Price: {BEANS_SELL_PRICE.toFixed(2)}€</p>
+              {priceUpdate ? (<PriceUpdate />) : (<></>)}
             </div>
           </div>
         </div>
@@ -196,21 +225,24 @@ function Game() {
               <h4>Coffee</h4>
               <img src={img_cup} />
               <button onClick={() => sellItem('coffee')}>Sell 1</button>
-              <p>Sell for {COFFEE_SELL_PRICE}€</p>
+              <p>Sell for {COFFEE_SELL_PRICE.toFixed(2)}€</p>
+              {priceUpdate ? (<PriceUpdate />) : (<></>)}
             </div>
 
             <div className='item'>
               <h4>Crates</h4>
               <img src={img_crate} />
               <button onClick={() => sellItem('crate')}>Sell 1</button>
-              <p>Sell for {CRATE_SELL_PRICE}€</p>
+              <p>Sell for {CRATE_SELL_PRICE.toFixed(2)}€</p>
+              {priceUpdate ? (<PriceUpdate />) : (<></>)}
             </div>
 
             <div className='item'>
               <h4>Containers</h4>
               <img src={img_container} /> 
               <button onClick={() => sellItem('containers')}>Sell 1</button>
-              <p>Sell for {CONTAINER_SELL_PRICE}€</p>
+              <p>Sell for {CONTAINER_SELL_PRICE.toFixed(2)}€</p>
+              {priceUpdate ? (<PriceUpdate />) : (<></>)}
             </div>
           </div>
         </div>
@@ -274,6 +306,15 @@ function Game() {
               <img src={img_auto_brew} />
               <button id="buy-brew-button" onClick={(event) => handleTransactionItems('auto_brew', event)}>Buy</button>
               <p>Buy for {AUTO_BREW_PRICE}€</p>
+              <p className='description'>(Crafts Coffee <br/> using items in stock)</p>
+            </div>
+
+            <div className='item'>
+              <h4>A New Shop</h4>
+              <img src={img_shop} />
+              <button id="buy-shop-button" onClick={(event) => handleTransactionItems('shop', event)}>Buy</button>
+              <p>Buy for {SHOP_BUY_PRICE}€</p>
+              <p className='description'>(Increases sales prices by <br/> 15%)</p>
             </div>
           </div>
         </div>
