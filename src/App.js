@@ -17,7 +17,7 @@ const BEANS_BUY_PRICE = 15;
 const BEANS_SELL_PRICE = 2.4; 
 const COFFEE_SELL_PRICE = 8;
 const CRATE_SELL_PRICE = 180;
-const CONTAINER_SELL_PRICE = 1000;
+const CONTAINER_SELL_PRICE = 900;
 const BOTTLE_BUY_PRICE = 100;
 const BAG_BUY_PRICE = 600;
 
@@ -87,7 +87,7 @@ function Game() {
   function handleBag(e) {
     if (checkBalance(BAG_BUY_PRICE)) {
       setMoney(money - BAG_BUY_PRICE);
-      setWater(water + 200);
+      setWater(coffee + 200);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("bag-button").disabled = true;
