@@ -9,7 +9,7 @@ import img_bottle from './img/bottle.png';
 import img_bag from './img/bag.jpeg';
 
 
-const START_BUDGET = 200
+const START_BUDGET = 300;
 
 const WATER_BUY_PRICE = 1;
 const WATER_SELL_PRICE = 0.5;
@@ -87,7 +87,7 @@ function Game() {
   function handleBag(e) {
     if (checkBalance(BAG_BUY_PRICE)) {
       setMoney(money - BAG_BUY_PRICE);
-      setWater(coffee + 200);
+      setBeans(beans + 200);
 
       e.target.parentNode.className = "item deactivated";
       document.getElementById("bag-button").disabled = true;
