@@ -12,15 +12,15 @@ import img_car from './img/car.png';
 import img_shop from './img/shop.png';
 
 
-let START_BUDGET = 20000;
+let START_BUDGET = 300;
 
 let WATER_BUY_PRICE = 1;
 let BEANS_BUY_PRICE = 15;
-let BOTTLE_BUY_PRICE = 100;
-let BAG_BUY_PRICE = 600;
+let BOTTLE_BUY_PRICE = 150;
+let BAG_BUY_PRICE = 700;
 let AUTO_BREW_PRICE = 500;
-let CAR_BUY_PRICE = 10000;
-let SHOP_BUY_PRICE = 20000;
+let CAR_BUY_PRICE = 20000;
+let SHOP_BUY_PRICE = 10000;
 
 let WATER_SELL_PRICE = 0.5;
 let BEANS_SELL_PRICE = 2.4;
@@ -88,15 +88,9 @@ function Game() {
     if (item == 'bottle' && checkBalance(BOTTLE_BUY_PRICE)) {
       setMoney(money - BOTTLE_BUY_PRICE);
       setWater(water + 100);
-
-      e.target.parentNode.className = "item deactivated";
-      document.getElementById("bottle-button").disabled = true;
     } else if (item == 'bag' && checkBalance(BAG_BUY_PRICE)) {
       setMoney(money - BAG_BUY_PRICE);
       setBeans(beans + 200);
-
-      e.target.parentNode.className = "item deactivated";
-      document.getElementById("bag-button").disabled = true;
     } else if (item == 'auto_brew' && checkBalance(AUTO_BREW_PRICE)) {
       setMoney(money - AUTO_BREW_PRICE);
       setBrewing(true);
