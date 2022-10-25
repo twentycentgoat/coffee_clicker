@@ -2,8 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
   flex-wrap: wrap;
+
+  --theme-color: #439445;
 }
 
 body {
@@ -21,7 +22,7 @@ body {
   height: 3rem;
   margin-top: 20px;
 
-  background-color: #4caf50;
+  background-color: var(--theme-color);
   color: #FFF;
   font-size: 1.2rem;
   font-weight: 600;
@@ -67,7 +68,7 @@ body {
 
   font-size: 2.5rem;
   font-family: 'Silkscreen', Arial;
-  background-color: #439445;
+  background-color: var(--theme-color);
   color: white;
 }
 
@@ -105,7 +106,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #4caf50;
+  color: #439445;
 }
 
 .Stats h1 {
@@ -119,7 +120,7 @@ body {
 }
 
 .Ressources, .Business, .Tools, .Goal {
-  border: 2px solid #439445;
+  border: 2px solid var(--theme-color);
   border-radius: 3px;
   padding: 30px;
 }
@@ -165,7 +166,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 10px 20px;
-  border: 2px solid #439445;
+  border: 2px solid var(--theme-color);
   border-radius: 5px;
   margin: 10px;
 
@@ -179,7 +180,7 @@ body {
 .item button {
   width: 3rem;
   height: 1.3rem;
-  background-color: #439445;
+  background-color: var(--theme-color);
   color: white;
   border: none;
   border-radius: 3px;
@@ -233,5 +234,5 @@ body {
 }
 
 #salesprice {
-  color: #439445;
+  color: var(--theme-color);
 }

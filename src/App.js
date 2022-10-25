@@ -10,6 +10,7 @@ import img_bag from './img/bag.jpeg';
 import img_auto_brew from './img/auto-brew.png';
 import img_car from './img/car.png';
 import img_shop from './img/shop.png';
+import img_house from './img/house.png';
 
 
 let START_BUDGET = 300;
@@ -20,23 +21,15 @@ let BOTTLE_BUY_PRICE = 150;
 let BAG_BUY_PRICE = 700;
 let AUTO_BREW_PRICE = 500;
 let CAR_BUY_PRICE = 20000;
+let HOUSE_BUY_PRICE = 30000;
 let SHOP_BUY_PRICE = 10000;
 
 let WATER_SELL_PRICE = 0.5;
 let BEANS_SELL_PRICE = 2.4;
 let COFFEE_SELL_PRICE = 8;
 let CRATE_SELL_PRICE = 180;
-let CONTAINER_SELL_PRICE = 900;
+let CONTAINER_SELL_PRICE = 1000;
 
-
-
-function PriceUpdate() {
-  return (
-    <>
-      <p id="salesprice">+15% On Sales</p>
-    </>
-  )
-}
 
 
 function Game() {
@@ -50,104 +43,135 @@ function Game() {
   const [priceUpdate, setPriceUpdate] = useState(false);
   const [carOwned, setCarOwned] = useState(false);
   const [shopOwned, setShopOwned] = useState(false);
+  const [houseOwned, setHouseOwned] = useState(false);
 
 
   function checkBalance(price) {
-    if (money >= price) {
-      return true;
-    } else {
-      return false;
-    }
+    return (money >= price) ? true : false;
   }
 
   function checkInventory(item) {
-    if (item > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return (item > 0) ? true : false;
+  }
+
+  function deactivateButton(e, i) {
+    e.target.parentNode.className = "item deactivated";
+    document.getElementById(i).disabled = true;
+  }
+
+  function increaseSalesPricesBy(i) {
+    WATER_SELL_PRICE *= i;
+    BEANS_SELL_PRICE *= i;
+    COFFEE_SELL_PRICE *= i;
+    CRATE_SELL_PRICE *= i;
+    CONTAINER_SELL_PRICE *= i;
   }
 
   function handleTransactionMarket(item, state) {
-    if (item == 'water' && state && checkBalance(WATER_BUY_PRICE)) {
-      setMoney(money - WATER_BUY_PRICE);
-      setWater(water + 1);
-    } else if (item == 'water' && !state && checkInventory(water)) {
-      setMoney(money + WATER_SELL_PRICE);
-      setWater(water - 1);
-    } else if (item == 'beans' && state && checkBalance(BEANS_BUY_PRICE)) {
-      setMoney(money - BEANS_BUY_PRICE);
-      setBeans(beans + 5); 
-    } else if (item == 'beans' && !state &&checkInventory(beans)) {
-      setMoney(money + BEANS_SELL_PRICE);
-      setBeans(beans - 1);
+    switch (item) {
+      case 'water':
+        if(state && checkBalance(WATER_BUY_PRICE)) {
+          setMoney(money - WATER_BUY_PRICE);
+          setWater(water + 1);
+        } 
+        else if (!state && checkInventory(water)) {
+          setMoney(money + WATER_SELL_PRICE);
+          setWater(water - 1);
+        }
+        break;
+      case 'beans':
+        if(state && checkBalance(BEANS_BUY_PRICE)) {
+          setMoney(money - BEANS_BUY_PRICE);
+          setBeans(beans + 5);
+        } 
+        else if (!state && checkInventory(beans)) {
+          setMoney(money + BEANS_SELL_PRICE);
+          setBeans(beans - 1);
+        } 
+        break;
+  
     }
   }
 
   function handleTransactionItems(item, e) {
-    if (item == 'bottle' && checkBalance(BOTTLE_BUY_PRICE)) {
-      setMoney(money - BOTTLE_BUY_PRICE);
-      setWater(water + 100);
-    } else if (item == 'bag' && checkBalance(BAG_BUY_PRICE)) {
-      setMoney(money - BAG_BUY_PRICE);
-      setBeans(beans + 200);
-    } else if (item == 'auto_brew' && checkBalance(AUTO_BREW_PRICE)) {
-      setMoney(money - AUTO_BREW_PRICE);
-      setBrewing(true);
-
-      e.target.parentNode.className = "item deactivated";
-      document.getElementById("buy-brew-button").disabled = true;
-    } else if (item == 'car' && checkBalance(CAR_BUY_PRICE)) {
-      setMoney(money - 10000);
-      setCarOwned(true);
-
-      e.target.parentNode.className = "item deactivated";
-      document.getElementById("buy-car-button").disabled = true;
-    } else if (item == 'shop' && checkBalance(SHOP_BUY_PRICE)) {
-      setMoney(money - 20000);
-      WATER_SELL_PRICE *= 1.15;
-      BEANS_SELL_PRICE *= 1.15;
-      COFFEE_SELL_PRICE *= 1.15;
-      CRATE_SELL_PRICE *= 1.15;
-      CONTAINER_SELL_PRICE *= 1.15;
-      setPriceUpdate(true);
-      setShopOwned(true);
-
-      e.target.parentNode.className = "item deactivated";
-      document.getElementById("buy-shop-button").disabled = true;
-    } else {
-      //
+    switch (item) {
+      case 'bottle':
+        if (checkBalance(BOTTLE_BUY_PRICE)) {
+          setMoney(money - BOTTLE_BUY_PRICE);
+          setWater(water + 100);
+        } break;
+      case 'bag':
+        if (checkBalance(BAG_BUY_PRICE)) {
+          setMoney(money - BAG_BUY_PRICE);
+          setBeans(beans + 200);
+        } break;
+      case 'auto_brew':
+        if (checkBalance(AUTO_BREW_PRICE)) {
+          setMoney(money - AUTO_BREW_PRICE);
+          setBrewing(true);
+          deactivateButton(e, "buy-brew-button");
+        } break;
+      case 'car':
+        if (checkBalance(CAR_BUY_PRICE)) {
+          setMoney(money - 10000);
+          setCarOwned(true);
+          deactivateButton(e, "buy-car-button");
+        } break;
+      case 'shop':
+        if(checkBalance(SHOP_BUY_PRICE)) {
+          setMoney(money - 20000);
+          increaseSalesPricesBy(1.15);
+          setPriceUpdate(true);
+          setShopOwned(true);
+          deactivateButton(e, "buy-shop-button");
+        } break;
+      case 'house':
+        if (checkBalance(HOUSE_BUY_PRICE)) {
+          setMoney(money - HOUSE_BUY_PRICE);
+          setHouseOwned(true);
+          deactivateButton(e, "buy-house-button");
+        } break;
     }
   }
 
   function craftItem(item) {
-    if (item == 'coffee' && (water >= 1 && beans >= 2)) {
-      setWater(water - 1);
-      setBeans(beans - 2);
-      setCoffee(coffee + 1);
-    } else if (item == 'crate' && coffee >= 20) {
-      setCrates(crates + 1);
-      setCoffee(coffee - 20);
-    } else if (item == 'containers' && crates >= 5) {
-      setContainer(containers + 1);
-      setCrates(crates - 5);
-    } else {
-      //
-    }
+    switch (item) {
+      case 'coffee':
+        if (water >= 1 && beans >= 2) {
+          setWater(water - 1);
+          setBeans(beans - 2);
+          setCoffee(coffee + 1);
+        } break;
+      case 'crate':
+        if (coffee >= 20) {
+          setCrates(crates + 1);
+          setCoffee(coffee - 20);
+        } break;
+      case 'containers':
+        if (crates >= 5) {
+          setContainer(containers + 1);
+          setCrates(crates - 5);
+        } break;
+    } 
   }
 
   function sellItem(item) {
-    if (item == 'coffee' && coffee > 0) {
-      setMoney(money + COFFEE_SELL_PRICE);
-      setCoffee(coffee - 1);
-    } else if (item == 'crate' && crates > 0) {
-      setMoney(money + CRATE_SELL_PRICE);
-      setCrates(crates - 1)
-    } else if (item == 'containers' && containers > 0) {
-      setMoney(money + CONTAINER_SELL_PRICE);
-      setContainer(containers - 1);
-    } else {
-      //
+    switch (item) {
+      case 'coffee':
+        if(coffee > 0) {
+          setMoney(money + CONTAINER_SELL_PRICE);
+          setCoffee(coffee - 1);
+        } break;
+      case 'crate':
+        if (crates > 0) {
+          setMoney(money + CRATE_SELL_PRICE);
+          setCrates(crates - 1);
+        } break;
+      case 'containers':
+        if (containers > 0) {
+          setMoney(money + CONTAINER_SELL_PRICE);
+          setContainer(containers - 1);
+        } break;
     }
   }
 
@@ -156,11 +180,13 @@ function Game() {
       setCoffee(water);
       setBeans(beans - (water * 2));
       setWater(0);
-    } else if (water >= (beans / 2)) {
+    } 
+    else if (water >= (beans / 2)) {
       setCoffee(Math.floor(beans / 2));
       setWater(water - Math.floor(beans / 2));
       setBeans(beans % 2);
-    } else {
+    } 
+    else {
       //
     }
   }
@@ -197,7 +223,7 @@ function Game() {
               <p>Price: {WATER_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('water', false)}>Sell 1</button>
               <p>Price: {WATER_SELL_PRICE.toFixed(2)}€</p>
-              {priceUpdate ? (<PriceUpdate />) : (<></>)}
+              {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
 
             <div className='item'>
@@ -207,7 +233,7 @@ function Game() {
               <p>Price: {BEANS_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('beans', false)}>Sell 1</button>
               <p>Price: {BEANS_SELL_PRICE.toFixed(2)}€</p>
-              {priceUpdate ? (<PriceUpdate />) : (<></>)}
+              {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
           </div>
         </div>
@@ -220,7 +246,7 @@ function Game() {
               <img src={img_cup} />
               <button onClick={() => sellItem('coffee')}>Sell 1</button>
               <p>Sell for {COFFEE_SELL_PRICE.toFixed(2)}€</p>
-              {priceUpdate ? (<PriceUpdate />) : (<></>)}
+              {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
 
             <div className='item'>
@@ -228,7 +254,7 @@ function Game() {
               <img src={img_crate} />
               <button onClick={() => sellItem('crate')}>Sell 1</button>
               <p>Sell for {CRATE_SELL_PRICE.toFixed(2)}€</p>
-              {priceUpdate ? (<PriceUpdate />) : (<></>)}
+              {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
 
             <div className='item'>
@@ -236,7 +262,7 @@ function Game() {
               <img src={img_container} /> 
               <button onClick={() => sellItem('containers')}>Sell 1</button>
               <p>Sell for {CONTAINER_SELL_PRICE.toFixed(2)}€</p>
-              {priceUpdate ? (<PriceUpdate />) : (<></>)}
+              {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
           </div>
         </div>
@@ -324,6 +350,13 @@ function Game() {
               <button onClick={(event) => handleTransactionItems('car', event)}>Buy</button>
               <p>Buy for {CAR_BUY_PRICE}€</p>
             </div>
+
+            <div className='item'>
+              <h4>A New House</h4>
+              <img src={img_house} />
+              <button onClick={(event) => handleTransactionItems('car', event)}>Buy</button>
+              <p>Buy for {HOUSE_BUY_PRICE}€</p>
+            </div>
           </div>
         </div>
       </div>
@@ -364,7 +397,6 @@ function Menu() {
     )
   }
 }
-
 
 function App() {
   return (
