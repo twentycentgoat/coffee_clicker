@@ -14,6 +14,7 @@ import img_house from './img/house.png';
 import img_earth from './img/earth.png';
 import img_freighter from './img/freighter.png';
 import img_contract from './img/contract.png';
+import img_money from './img/money.png';
 
 
 let START_BUDGET = 10000;
@@ -28,6 +29,7 @@ let HOUSE_BUY_PRICE = 30000;
 let SHOP_BUY_PRICE = 10000;
 let EXPANSION_BUY_PRICE = 5000;
 let CONTRACT_BUY_PRICE = 2500;
+let DEFLATION_BUY_PRICE = 1200;
  
 let WATER_SELL_PRICE = 0.5;
 let BEANS_SELL_PRICE = 2.4;
@@ -51,6 +53,7 @@ function Game() {
   const [freighters, setFreighters] = useState(1);
   const [brewing, setBrewing] = useState(false);
   const [expansion, setExpansion] = useState(false);
+  const [deflation, setDeflation] = useState(false);
   const [priceUpdate, setPriceUpdate] = useState(false);
   const [contract, setContract] = useState(false);
   const [carOwned, setCarOwned] = useState(false);
@@ -86,6 +89,12 @@ function Game() {
   function increaseMarketItemsBy(i) {
     AMOUNT_WATER *= 2;
     AMOUNT_BEANS *= 2;
+  }
+  
+  function checkAllGoalsReached() {
+    if (carOwned && houseOwned) {
+      //
+    }
   }
 
   function handleTransactionMarket(item, state) {
@@ -139,6 +148,7 @@ function Game() {
           setMoney(money - CAR_BUY_PRICE);
           setCarOwned(true);
           deactivateItem(e, "buy-car-button");
+          checkAllGoalsReached();
         } break;
       case 'shop':
         if(checkBalance(SHOP_BUY_PRICE)) {
@@ -152,6 +162,7 @@ function Game() {
           setMoney(money - HOUSE_BUY_PRICE);
           setHouseOwned(true);
           deactivateItem(e, "buy-house-button");
+          checkAllGoalsReached();
         } break;
       case 'expansion':
         if (checkBalance(EXPANSION_BUY_PRICE)) {
@@ -169,6 +180,13 @@ function Game() {
           activateItem("deals-bag");
           deactivateItem(e, "buy-contract-button");
         } break;
+      case 'deflation':
+        if (checkBalance(DEFLATION_BUY_PRICE)) {
+          setMoney(money - DEFLATION_BUY_PRICE);
+          setDeflation(true);
+          deactivateItem(e, "buy-deflation-button");
+          increaseMarketItemsBy(2);
+        }
       default:
         break;
     }
@@ -415,11 +433,19 @@ function Game() {
             </div>
 
             <div className='item'>
+              <h4>Deflation</h4>
+              <img src={img_money} alt="Deflation"/>
+              <button id="buy-deflation-button" onClick={(event) => handleTransactionItems('deflation', event)}>Buy</button>
+              <p>Buy for {DEFLATION_BUY_PRICE}€</p>
+              <p className='description'>(Increases amount of Water and Beans <br/> in the Market)</p>
+            </div>
+
+            <div className='item'>
               <h4>Supplier Contract</h4>
               <img src={img_contract} alt="Shop"/>
               <button id="buy-contract-button" onClick={(event) => handleTransactionItems('contract', event)}>Buy</button>
               <p>Buy for {CONTRACT_BUY_PRICE}€</p>
-              <p className='description'>(Increases amount of <br/> Water and Beans on the market)</p>
+              <p className='description'>(Unlocks Deals)</p>
             </div>
 
             <div className='item'>
