@@ -13,19 +13,21 @@ import img_shop from './img/shop.png';
 import img_house from './img/house.png';
 import img_earth from './img/earth.png';
 import img_freighter from './img/freighter.png';
+import img_contract from './img/contract.png';
 
 
 let START_BUDGET = 10000;
 
 let WATER_BUY_PRICE = 1;
 let BEANS_BUY_PRICE = 15;
-let BOTTLE_BUY_PRICE = 150;
-let BAG_BUY_PRICE = 700;
+let BOTTLE_BUY_PRICE = 100;
+let BAG_BUY_PRICE = 600;
 let AUTO_BREW_PRICE = 500;
 let CAR_BUY_PRICE = 20000;
 let HOUSE_BUY_PRICE = 30000;
 let SHOP_BUY_PRICE = 10000;
 let EXPANSION_BUY_PRICE = 5000;
+let CONTRACT_BUY_PRICE = 2500;
  
 let WATER_SELL_PRICE = 0.5;
 let BEANS_SELL_PRICE = 2.4;
@@ -33,6 +35,9 @@ let COFFEE_SELL_PRICE = 8;
 let CRATE_SELL_PRICE = 180;
 let CONTAINER_SELL_PRICE = 1000;
 let FREIGHTER_SELL_PRICE = 7000;
+
+let AMOUNT_WATER = 1;
+let AMOUNT_BEANS = 5;
 
 
 
@@ -47,8 +52,8 @@ function Game() {
   const [brewing, setBrewing] = useState(false);
   const [expansion, setExpansion] = useState(false);
   const [priceUpdate, setPriceUpdate] = useState(false);
+  const [contract, setContract] = useState(false);
   const [carOwned, setCarOwned] = useState(false);
-  const [shopOwned, setShopOwned] = useState(false);
   const [houseOwned, setHouseOwned] = useState(false);
 
 
@@ -78,12 +83,17 @@ function Game() {
     FREIGHTER_SELL_PRICE *= i;
   }
 
+  function increaseMarketItemsBy(i) {
+    AMOUNT_WATER *= 2;
+    AMOUNT_BEANS *= 2;
+  }
+
   function handleTransactionMarket(item, state) {
     switch (item) {
       case 'water':
         if(state && checkBalance(WATER_BUY_PRICE)) {
           setMoney(money - WATER_BUY_PRICE);
-          setWater(water + 1);
+          setWater(water + AMOUNT_WATER);
         } 
         else if (!state && checkInventory(water)) {
           setMoney(money + WATER_SELL_PRICE);
@@ -93,7 +103,7 @@ function Game() {
       case 'beans':
         if(state && checkBalance(BEANS_BUY_PRICE)) {
           setMoney(money - BEANS_BUY_PRICE);
-          setBeans(beans + 5);
+          setBeans(beans + AMOUNT_BEANS);
         } 
         else if (!state && checkInventory(beans)) {
           setMoney(money + BEANS_SELL_PRICE);
@@ -135,7 +145,6 @@ function Game() {
           setMoney(money - SHOP_BUY_PRICE);
           increaseSalesPricesBy(1.15);
           setPriceUpdate(true);
-          setShopOwned(true);
           deactivateItem(e, "buy-shop-button");
         } break;
       case 'house':
@@ -151,6 +160,14 @@ function Game() {
           deactivateItem(e, "buy-expansion-button");
           activateItem("freighters");
           activateItem("freighters-craft");
+        } break;
+      case 'contract':
+        if (checkBalance(CONTRACT_BUY_PRICE)) {
+          setMoney(money - CONTRACT_BUY_PRICE);
+          setContract(true);
+          activateItem("deals-bottle");
+          activateItem("deals-bag");
+          deactivateItem(e, "buy-contract-button");
         } break;
       default:
         break;
@@ -189,7 +206,7 @@ function Game() {
     switch (item) {
       case 'coffee':
         if(coffee > 0) {
-          setMoney(money + CONTAINER_SELL_PRICE);
+          setMoney(money + COFFEE_SELL_PRICE);
           setCoffee(coffee - 1);
         } break;
       case 'crate':
@@ -256,7 +273,7 @@ function Game() {
             <div className='item'>
               <h4>Water</h4>
               <img src={img_water} alt="Water"/>
-              <button onClick={() => handleTransactionMarket('water', true)}>Buy 1</button>
+              <button onClick={() => handleTransactionMarket('water', true)}>Buy {AMOUNT_WATER}</button>
               <p>Price: {WATER_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('water', false)}>Sell 1</button>
               <p>Price: {WATER_SELL_PRICE.toFixed(2)}€</p>
@@ -266,7 +283,7 @@ function Game() {
             <div className='item'>
               <h4>Beans</h4>
               <img src={img_beans} alt="Beans"/>
-              <button onClick={() => handleTransactionMarket('beans', true)}>Buy 5</button>
+              <button onClick={() => handleTransactionMarket('beans', true)}>Buy {AMOUNT_BEANS}</button>
               <p>Price: {BEANS_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('beans', false)}>Sell 1</button>
               <p>Price: {BEANS_SELL_PRICE.toFixed(2)}€</p>
@@ -319,19 +336,27 @@ function Game() {
         <div className='Deals'>
           <h1>Deals</h1>
           <div className='dealables'>
-            <div className='item'>
+            <div id="deals-bottle" className='item deactivated'>
               <h4>Water Bottle</h4>
               <p className="description">(100 Water)</p>
               <img src={img_bottle} alt="Bottle"/>
+              {contract ? (
               <button id="bottle-button" onClick={(event) => handleTransactionItems('bottle', event)}>Buy</button>
+              ) : (
+              <button id="bottle-button" onClick={(event) => handleTransactionItems('bottle', event)} disabled="true">Buy</button>
+              )}
               <p>Buy for {BOTTLE_BUY_PRICE}€</p>
             </div>
 
-            <div className='item'>
+            <div id="deals-bag" className='item deactivated'>
               <h4>Bean Bag</h4>
               <p className='description'>(200 Beans)</p>
               <img src={img_bag} alt="Bean Bag"/>
+              {contract ? (
               <button id="bag-button" onClick={(event) => handleTransactionItems('bag', event)}>Buy</button>
+              ) : (
+              <button id="bag-button" onClick={(event) => handleTransactionItems('bag', event)} disabled="true">Buy</button>
+              )}
               <p>Buy for {BAG_BUY_PRICE}€</p>
             </div>
           </div>
@@ -387,6 +412,14 @@ function Game() {
               <button id="buy-brew-button" onClick={(event) => handleTransactionItems('auto_brew', event)}>Buy</button>
               <p>Buy for {AUTO_BREW_PRICE}€</p>
               <p className='description'>(Crafts Coffee <br/> using items in stock)</p>
+            </div>
+
+            <div className='item'>
+              <h4>Supplier Contract</h4>
+              <img src={img_contract} alt="Shop"/>
+              <button id="buy-contract-button" onClick={(event) => handleTransactionItems('contract', event)}>Buy</button>
+              <p>Buy for {CONTRACT_BUY_PRICE}€</p>
+              <p className='description'>(Increases amount of <br/> Water and Beans on the market)</p>
             </div>
 
             <div className='item'>
