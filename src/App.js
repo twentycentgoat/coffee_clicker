@@ -17,7 +17,7 @@ import img_contract from './img/contract.png';
 import img_money from './img/money.png';
 
 
-let START_BUDGET = 10000;
+let START_BUDGET = 300;
 
 let WATER_BUY_PRICE = 1;
 let BEANS_BUY_PRICE = 15;
@@ -49,8 +49,8 @@ function Game() {
   const [beans, setBeans] = useState(0);
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
-  const [containers, setContainer] = useState(5);
-  const [freighters, setFreighters] = useState(1);
+  const [containers, setContainer] = useState(0);
+  const [freighters, setFreighters] = useState(0);
   const [brewing, setBrewing] = useState(false);
   const [expansion, setExpansion] = useState(false);
   const [deflation, setDeflation] = useState(false);
