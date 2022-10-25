@@ -42,8 +42,8 @@ function Game() {
   const [beans, setBeans] = useState(0);
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
-  const [containers, setContainer] = useState(0);
-  const [freighters, setFreighters] = useState(0);
+  const [containers, setContainer] = useState(5);
+  const [freighters, setFreighters] = useState(1);
   const [brewing, setBrewing] = useState(false);
   const [expansion, setExpansion] = useState(false);
   const [priceUpdate, setPriceUpdate] = useState(false);
@@ -65,9 +65,8 @@ function Game() {
     document.getElementById(i).disabled = true;
   }
 
-  function activateItem(c, i) {
+  function activateItem(c) {
     document.getElementById(c).className = "item";
-    document.getElementById(i).disabled = false;
   }
 
   function increaseSalesPricesBy(i) {
@@ -76,6 +75,7 @@ function Game() {
     COFFEE_SELL_PRICE *= i;
     CRATE_SELL_PRICE *= i;
     CONTAINER_SELL_PRICE *= i;
+    FREIGHTER_SELL_PRICE *= i;
   }
 
   function handleTransactionMarket(item, state) {
@@ -99,6 +99,8 @@ function Game() {
           setMoney(money + BEANS_SELL_PRICE);
           setBeans(beans - 1);
         } 
+        break;
+      default:
         break;
   
     }
@@ -124,13 +126,13 @@ function Game() {
         } break;
       case 'car':
         if (checkBalance(CAR_BUY_PRICE)) {
-          setMoney(money - 10000);
+          setMoney(money - CAR_BUY_PRICE);
           setCarOwned(true);
           deactivateItem(e, "buy-car-button");
         } break;
       case 'shop':
         if(checkBalance(SHOP_BUY_PRICE)) {
-          setMoney(money - 20000);
+          setMoney(money - SHOP_BUY_PRICE);
           increaseSalesPricesBy(1.15);
           setPriceUpdate(true);
           setShopOwned(true);
@@ -147,9 +149,11 @@ function Game() {
           setMoney(money - EXPANSION_BUY_PRICE);
           setExpansion(true);
           deactivateItem(e, "buy-expansion-button");
-          activateItem("freighters", "buy-freighters-button");
-          activateItem("freighters-craft", "buy-freighters-button-craft");
+          activateItem("freighters");
+          activateItem("freighters-craft");
         } break;
+      default:
+        break;
     }
   }
 
@@ -176,6 +180,8 @@ function Game() {
           setFreighters(freighters + 1);
           setContainer(containers - 5);
         } break;
+      default:
+        break;
     } 
   }
 
@@ -201,6 +207,8 @@ function Game() {
           setMoney(money + FREIGHTER_SELL_PRICE);
           setFreighters(freighters - 1);
         } break;
+      default: 
+        break;
     }
   }
 
@@ -222,7 +230,6 @@ function Game() {
 
   return(
     <div className='Game'>
-
       <div className='Stats'>
         <h1>Money: {money.toFixed(2)}€</h1>
         <h1>Profit: {(money - START_BUDGET).toFixed(2)}€</h1>
@@ -248,7 +255,7 @@ function Game() {
           <div className='ingredients'>
             <div className='item'>
               <h4>Water</h4>
-              <img src={img_water} />
+              <img src={img_water} alt="Water"/>
               <button onClick={() => handleTransactionMarket('water', true)}>Buy 1</button>
               <p>Price: {WATER_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('water', false)}>Sell 1</button>
@@ -258,7 +265,7 @@ function Game() {
 
             <div className='item'>
               <h4>Beans</h4>
-              <img src={img_beans}/>
+              <img src={img_beans} alt="Beans"/>
               <button onClick={() => handleTransactionMarket('beans', true)}>Buy 5</button>
               <p>Price: {BEANS_BUY_PRICE}€</p>
               <button onClick={() => handleTransactionMarket('beans', false)}>Sell 1</button>
@@ -273,7 +280,7 @@ function Game() {
           <div className='sellables'>
             <div className='item'>
               <h4>Coffee</h4>
-              <img src={img_cup} />
+              <img src={img_cup} alt="Coffee"/>
               <button onClick={() => sellItem('coffee')}>Sell 1</button>
               <p>Sell for {COFFEE_SELL_PRICE.toFixed(2)}€</p>
               {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
@@ -281,7 +288,7 @@ function Game() {
 
             <div className='item'>
               <h4>Crates</h4>
-              <img src={img_crate} />
+              <img src={img_crate} alt="Crate"/>
               <button onClick={() => sellItem('crate')}>Sell 1</button>
               <p>Sell for {CRATE_SELL_PRICE.toFixed(2)}€</p>
               {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
@@ -289,7 +296,7 @@ function Game() {
 
             <div className='item'>
               <h4>Containers</h4>
-              <img src={img_container} /> 
+              <img src={img_container} alt="Container"/> 
               <button onClick={() => sellItem('containers')}>Sell 1</button>
               <p>Sell for {CONTAINER_SELL_PRICE.toFixed(2)}€</p>
               {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
@@ -297,8 +304,12 @@ function Game() {
 
             <div id="freighters" className='item deactivated'>
               <h4>Freighters</h4>
-              <img src={img_freighter} /> 
+              <img src={img_freighter} alt="Freighter"/> 
+              {expansion ? (
+              <button id="buy-freighters-button" onClick={() => sellItem('freighters')}>Sell 1</button>
+              ) : (
               <button id="buy-freighters-button" onClick={() => sellItem('freighters')} disabled="true">Sell 1</button>
+              )}
               <p>Sell for {FREIGHTER_SELL_PRICE.toFixed(2)}€</p>
               {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
@@ -311,7 +322,7 @@ function Game() {
             <div className='item'>
               <h4>Water Bottle</h4>
               <p className="description">(100 Water)</p>
-              <img src={img_bottle} />
+              <img src={img_bottle} alt="Bottle"/>
               <button id="bottle-button" onClick={(event) => handleTransactionItems('bottle', event)}>Buy</button>
               <p>Buy for {BOTTLE_BUY_PRICE}€</p>
             </div>
@@ -319,7 +330,7 @@ function Game() {
             <div className='item'>
               <h4>Bean Bag</h4>
               <p className='description'>(200 Beans)</p>
-              <img src={img_bag} />
+              <img src={img_bag} alt="Bean Bag"/>
               <button id="bag-button" onClick={(event) => handleTransactionItems('bag', event)}>Buy</button>
               <p>Buy for {BAG_BUY_PRICE}€</p>
             </div>
@@ -333,7 +344,7 @@ function Game() {
           <div className='craftables'>
             <div className='item'>
               <h4>Coffee</h4>
-              <img src={img_cup} />
+              <img src={img_cup} alt="Coffee"/>
               <button onClick={() => craftItem('coffee')}>Craft</button>
               <p>1 Water | 2 Beans</p>
               {brewing ? (
@@ -342,22 +353,26 @@ function Game() {
 
             <div className='item'>
               <h4>Crate</h4>
-              <img src={img_crate} />
+              <img src={img_crate} alt="Crate"/>
               <button onClick={() => craftItem('crate')}>Craft</button>
               <p>20 Coffee</p>
             </div>
 
             <div className='item'>
               <h4>Container</h4>
-              <img src={img_container} />
+              <img src={img_container} alt="Container"/>
               <button onClick={() => craftItem('containers')}>Craft</button>
               <p>5 Crates</p>
             </div>
 
             <div id="freighters-craft" className='item deactivated'>
               <h4>Freighters</h4>
-              <img src={img_freighter} />
-              <button id="buy-freighters-button-craft" onClick={() => craftItem('containers')} disabled="true">Craft</button>
+              <img src={img_freighter} alt="Freighter"/>
+              {expansion ? (
+              <button id="buy-freighters-button-craft" onClick={() => craftItem('freighters')}>Craft</button>
+              ) : (
+              <button id="buy-freighters-button-craft" onClick={() => craftItem('freighters')} disabled="true">Craft</button>)
+              }
               <p>5 Containers</p>
             </div>
           </div>
@@ -368,7 +383,7 @@ function Game() {
           <div className='upgradeables'>
             <div className='item'>
               <h4>Automatic Brewing</h4>
-              <img src={img_auto_brew} />
+              <img src={img_auto_brew} alt="Automatic Brewing"/>
               <button id="buy-brew-button" onClick={(event) => handleTransactionItems('auto_brew', event)}>Buy</button>
               <p>Buy for {AUTO_BREW_PRICE}€</p>
               <p className='description'>(Crafts Coffee <br/> using items in stock)</p>
@@ -376,7 +391,7 @@ function Game() {
 
             <div className='item'>
               <h4>Expansion</h4>
-              <img src={img_earth} />
+              <img src={img_earth} alt="Earth"/>
               <button id="buy-expansion-button" onClick={(event) => handleTransactionItems('expansion', event)}>Buy</button>
               <p>Buy for {EXPANSION_BUY_PRICE}€</p>
               <p className='description'>(Unlocks Freighters Item)</p>
@@ -384,7 +399,7 @@ function Game() {
 
             <div className='item'>
               <h4>A New Shop</h4>
-              <img src={img_shop} />
+              <img src={img_shop} alt="Shop"/>
               <button id="buy-shop-button" onClick={(event) => handleTransactionItems('shop', event)}>Buy</button>
               <p>Buy for {SHOP_BUY_PRICE}€</p>
               <p className='description'>(Increases sales prices by <br/> 15%)</p>
@@ -399,14 +414,14 @@ function Game() {
           <div className='goals'>
             <div className='item'>
               <h4>A New Car</h4>
-              <img src={img_car} />
+              <img src={img_car} alt="Car"/>
               <button onClick={(event) => handleTransactionItems('car', event)}>Buy</button>
               <p>Buy for {CAR_BUY_PRICE}€</p>
             </div>
 
             <div className='item'>
               <h4>A New House</h4>
-              <img src={img_house} />
+              <img src={img_house} alt="House"/>
               <button onClick={(event) => handleTransactionItems('car', event)}>Buy</button>
               <p>Buy for {HOUSE_BUY_PRICE}€</p>
             </div>
