@@ -11,9 +11,11 @@ import img_auto_brew from './img/auto-brew.png';
 import img_car from './img/car.png';
 import img_shop from './img/shop.png';
 import img_house from './img/house.png';
+import img_earth from './img/earth.png';
+import img_freighter from './img/freighter.png';
 
 
-let START_BUDGET = 300;
+let START_BUDGET = 10000;
 
 let WATER_BUY_PRICE = 1;
 let BEANS_BUY_PRICE = 15;
@@ -23,12 +25,14 @@ let AUTO_BREW_PRICE = 500;
 let CAR_BUY_PRICE = 20000;
 let HOUSE_BUY_PRICE = 30000;
 let SHOP_BUY_PRICE = 10000;
-
+let EXPANSION_BUY_PRICE = 5000;
+ 
 let WATER_SELL_PRICE = 0.5;
 let BEANS_SELL_PRICE = 2.4;
 let COFFEE_SELL_PRICE = 8;
 let CRATE_SELL_PRICE = 180;
 let CONTAINER_SELL_PRICE = 1000;
+let FREIGHTER_SELL_PRICE = 7000;
 
 
 
@@ -39,7 +43,9 @@ function Game() {
   const [coffee, setCoffee] = useState(0);
   const [crates, setCrates] = useState(0);
   const [containers, setContainer] = useState(0);
+  const [freighters, setFreighters] = useState(0);
   const [brewing, setBrewing] = useState(false);
+  const [expansion, setExpansion] = useState(false);
   const [priceUpdate, setPriceUpdate] = useState(false);
   const [carOwned, setCarOwned] = useState(false);
   const [shopOwned, setShopOwned] = useState(false);
@@ -54,9 +60,14 @@ function Game() {
     return (item > 0) ? true : false;
   }
 
-  function deactivateButton(e, i) {
+  function deactivateItem(e, i) {
     e.target.parentNode.className = "item deactivated";
     document.getElementById(i).disabled = true;
+  }
+
+  function activateItem(c, i) {
+    document.getElementById(c).className = "item";
+    document.getElementById(i).disabled = false;
   }
 
   function increaseSalesPricesBy(i) {
@@ -109,13 +120,13 @@ function Game() {
         if (checkBalance(AUTO_BREW_PRICE)) {
           setMoney(money - AUTO_BREW_PRICE);
           setBrewing(true);
-          deactivateButton(e, "buy-brew-button");
+          deactivateItem(e, "buy-brew-button");
         } break;
       case 'car':
         if (checkBalance(CAR_BUY_PRICE)) {
           setMoney(money - 10000);
           setCarOwned(true);
-          deactivateButton(e, "buy-car-button");
+          deactivateItem(e, "buy-car-button");
         } break;
       case 'shop':
         if(checkBalance(SHOP_BUY_PRICE)) {
@@ -123,13 +134,21 @@ function Game() {
           increaseSalesPricesBy(1.15);
           setPriceUpdate(true);
           setShopOwned(true);
-          deactivateButton(e, "buy-shop-button");
+          deactivateItem(e, "buy-shop-button");
         } break;
       case 'house':
         if (checkBalance(HOUSE_BUY_PRICE)) {
           setMoney(money - HOUSE_BUY_PRICE);
           setHouseOwned(true);
-          deactivateButton(e, "buy-house-button");
+          deactivateItem(e, "buy-house-button");
+        } break;
+      case 'expansion':
+        if (checkBalance(EXPANSION_BUY_PRICE)) {
+          setMoney(money - EXPANSION_BUY_PRICE);
+          setExpansion(true);
+          deactivateItem(e, "buy-expansion-button");
+          activateItem("freighters", "buy-freighters-button");
+          activateItem("freighters-craft", "buy-freighters-button-craft");
         } break;
     }
   }
@@ -152,6 +171,11 @@ function Game() {
           setContainer(containers + 1);
           setCrates(crates - 5);
         } break;
+      case 'freighters':
+        if (containers >= 5) {
+          setFreighters(freighters + 1);
+          setContainer(containers - 5);
+        } break;
     } 
   }
 
@@ -171,6 +195,11 @@ function Game() {
         if (containers > 0) {
           setMoney(money + CONTAINER_SELL_PRICE);
           setContainer(containers - 1);
+        } break;
+      case 'freighters':
+        if (freighters > 0) {
+          setMoney(money + FREIGHTER_SELL_PRICE);
+          setFreighters(freighters - 1);
         } break;
     }
   }
@@ -208,6 +237,7 @@ function Game() {
             <li>Coffee: {coffee}</li>
             <li>Crates: {crates}</li>
             <li>Containers: {containers}</li>
+            <li>Freighters: {freighters}</li>
           </ul>
         </div>
       </div>
@@ -264,6 +294,14 @@ function Game() {
               <p>Sell for {CONTAINER_SELL_PRICE.toFixed(2)}€</p>
               {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
             </div>
+
+            <div id="freighters" className='item deactivated'>
+              <h4>Freighters</h4>
+              <img src={img_freighter} /> 
+              <button id="buy-freighters-button" onClick={() => sellItem('freighters')} disabled="true">Sell 1</button>
+              <p>Sell for {FREIGHTER_SELL_PRICE.toFixed(2)}€</p>
+              {priceUpdate ? (<p id="salesprice">+15% On Sales</p>) : (<></>)}
+            </div>
           </div>
         </div>
 
@@ -315,6 +353,13 @@ function Game() {
               <button onClick={() => craftItem('containers')}>Craft</button>
               <p>5 Crates</p>
             </div>
+
+            <div id="freighters-craft" className='item deactivated'>
+              <h4>Freighters</h4>
+              <img src={img_freighter} />
+              <button id="buy-freighters-button-craft" onClick={() => craftItem('containers')} disabled="true">Craft</button>
+              <p>5 Containers</p>
+            </div>
           </div>
         </div>
 
@@ -327,6 +372,14 @@ function Game() {
               <button id="buy-brew-button" onClick={(event) => handleTransactionItems('auto_brew', event)}>Buy</button>
               <p>Buy for {AUTO_BREW_PRICE}€</p>
               <p className='description'>(Crafts Coffee <br/> using items in stock)</p>
+            </div>
+
+            <div className='item'>
+              <h4>Expansion</h4>
+              <img src={img_earth} />
+              <button id="buy-expansion-button" onClick={(event) => handleTransactionItems('expansion', event)}>Buy</button>
+              <p>Buy for {EXPANSION_BUY_PRICE}€</p>
+              <p className='description'>(Unlocks Freighters Item)</p>
             </div>
 
             <div className='item'>
