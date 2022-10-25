@@ -429,7 +429,7 @@ function Game() {
               <img src={img_auto_brew} alt="Automatic Brewing"/>
               <button id="buy-brew-button" onClick={(event) => handleTransactionItems('auto_brew', event)}>Buy</button>
               <p>Buy for {AUTO_BREW_PRICE}€</p>
-              <p className='description'>(Crafts Coffee <br/> using items in stock)</p>
+              <p className='description'>(Crafts Coffee <br/> Using Items In Stock)</p>
             </div>
 
             <div className='item'>
@@ -437,7 +437,7 @@ function Game() {
               <img src={img_money} alt="Deflation"/>
               <button id="buy-deflation-button" onClick={(event) => handleTransactionItems('deflation', event)}>Buy</button>
               <p>Buy for {DEFLATION_BUY_PRICE}€</p>
-              <p className='description'>(Increases amount of Water and Beans <br/> in the Market)</p>
+              <p className='description'>(Increases Amount Of Water And Beans <br/> In The Market)</p>
             </div>
 
             <div className='item'>
@@ -461,7 +461,7 @@ function Game() {
               <img src={img_shop} alt="Shop"/>
               <button id="buy-shop-button" onClick={(event) => handleTransactionItems('shop', event)}>Buy</button>
               <p>Buy for {SHOP_BUY_PRICE}€</p>
-              <p className='description'>(Increases sales prices by <br/> 15%)</p>
+              <p className='description'>(Increases Sales Prices By <br/> 15%)</p>
             </div>
           </div>
         </div>
