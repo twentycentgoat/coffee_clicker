@@ -53,7 +53,6 @@ function Game() {
   const [freighters, setFreighters] = useState(0);
   const [brewing, setBrewing] = useState(false);
   const [expansion, setExpansion] = useState(false);
-  const [deflation, setDeflation] = useState(false);
   const [priceUpdate, setPriceUpdate] = useState(false);
   const [contract, setContract] = useState(false);
   const [carOwned, setCarOwned] = useState(false);
@@ -183,10 +182,9 @@ function Game() {
       case 'deflation':
         if (checkBalance(DEFLATION_BUY_PRICE)) {
           setMoney(money - DEFLATION_BUY_PRICE);
-          setDeflation(true);
           deactivateItem(e, "buy-deflation-button");
           increaseMarketItemsBy(2);
-        }
+        } break;
       default:
         break;
     }
